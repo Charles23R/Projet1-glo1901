@@ -7,9 +7,8 @@ def lister_parties(idul):
     if rep.status_code == 200:
         # la requête s'est déroulée normalement; décoder le JSON
         rep = rep.json()
-        for clé in rep:
-            if clé == "message":
-                raise RuntimeError(rep["message"])
+        if "message" in rep:
+            raise RuntimeError(rep["message"])
         
         print(rep)
         return rep
@@ -26,9 +25,8 @@ def débuter_partie(idul):
     if rep.status_code == 200:
         # la requête s'est déroulée normalement; décoder le JSON
         rep = rep.json()
-        for clé in rep:
-            if clé == "message":
-                raise RuntimeError(rep["message"])
+        if "message" in rep:
+            raise RuntimeError(rep["message"])
 
         print(rep)
         return (rep["id"], rep["état"])
@@ -45,10 +43,9 @@ def jouer_coup(id_partie, type_coup, position):
     if rep.status_code == 200:
         # la requête s'est déroulée normalement; décoder le JSON
         rep = rep.json()
-        for clé in rep:
-            if clé == "message":
-                raise RuntimeError(rep["message"])
-            if clé == "gagnant":
+        if "message" in rep:
+            raise RuntimeError(rep["message"])
+        if "gagnant" in rep:
                 raise StopIteration(rep["gagnant"])
 
         print(rep)
@@ -59,6 +56,5 @@ def jouer_coup(id_partie, type_coup, position):
 
 
 #débuter_partie("nipag52")
-jouer_coup("e6c48d18-0dc7-4df3-a4b5-cf4e93110101", "D", (3, 9))
-
+#jouer_coup("e6c48d18-0dc7-4df3-a4b5-cf4e93110101", "D", (3, 9))
 #lister_parties("nipag52")
