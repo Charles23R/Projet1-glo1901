@@ -1,4 +1,3 @@
-
 import requests
 
 def lister_parties(idul):
