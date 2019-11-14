@@ -11,106 +11,131 @@ def analyser_commande():
     
     return parser.parse_args()
 
-#pas encore fait
+
 def afficher_damier_ascii(dico):
-    print(dico)
-    #damier = "Légende: 1="+dico["joueurs"].getKeys()[0]+", 2="+dico["joueurs"].getKeys()[1]+"\n"
-    #damier += "   "+("-" * 35)+"\n"
-    
 
-analyseur = analyser_commande()
+    cases = [["." for i in range(9)] for i in range(9)]
+    mursH = [[" " for i in range(8)] for i in range(35)]
+    mursV = [[" " for i in range(17)] for i in range(8)]
 
-rejouer = True
+    joueurs = dico["joueurs"]
+    idulJoueur = ""
+    for joueur in joueurs:
+        if joueur["nom"] == "robot":                #à changer pour test
+            cases[joueur["pos"][0]-1][joueur["pos"][1]-1] = "2"
+        else:
+            cases[joueur["pos"][0]-1][joueur["pos"][1]-1] = "1"
+            idulJoueur = joueur["nom"]
 
-while rejouer:
+    dicoH = dico["murs"]["horizontaux"]
+    for coord in dicoH:
+        for i in range(7):
+            mursH[(4*coord[0])-4+i][coord[1]-1] = "-"
 
-    partie = api.débuter_partie(analyseur.idul)
-    etat = partie[1]
-    idPartie = partie[0]
+    dicoV = dico["murs"]["verticaux"]
+    for coord in dicoV:
+        for i in range(3):
+            mursV[(coord[0])-2][(2*coord[1])-2+i] = "|"
 
-    partieTerminee = False
+    damier = "Légende: 1=" + idulJoueur + ", 2=automate\n"
+    damier += "   "+("-" * 35)+"\n"
 
-    try:
-        while not partieTerminee:
-            afficher_damier_ascii(etat)
-
-            error = True
-            while error:
-                print("Quelle action voulez-vous effectuer?")
-                print("1- Vous déplacer")
-                print("2- Placer un mur horizontal")
-                print("3- Placer un mur vertical")
-                print("\n4- Quitter")
-
-                reponse = input()
-
-                if str(reponse) == "1":
-                    while error:
-                        #créer un méthode
-                        print("\nEntrez les coordonnées où vous voulez vous déplacer")
-                        print("sous la forme suivante: x,y")
-                        inp = input()
-                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
-
-                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                            error = False
-                            etat = api.jouer_coup(idPartie, "D", coord)
-                        
-                        else:
-                            print("Veuillez entrer un choix valide")
-
-                elif str(reponse) == "2":
-                    while error:
-                        print("\nEntrez les coordonnées où vous voulez placer le mur")
-                        print("sous la forme suivante: x,y")
-                        inp = input()
-                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
-
-                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                            error = False
-                            etat = api.jouer_coup(idPartie, "MH", coord)
-                        
-                        else:
-                            print("Veuillez entrer un choix valide")
-
-                elif str(reponse) == "3":
-                    while error:
-                        print("\nEntrez les coordonnées où vous voulez vous placer le mur")
-                        print("sous la forme suivante: x,y")
-                        inp = input()
-                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
-
-                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                            error = False
-                            etat = api.jouer_coup(idPartie, "MV", coord)
-                        
-                        else:
-                            print("Veuillez entrer un choix valide")
-
-                elif str(reponse) == "4":
-                    error = False
-                    partieTerminee = True
-
-                else:
-                    print("Veuillez entrer un choix valide")
-
-    except StopIteration as err:
-        print("\n" + str(err) + " a remporté la partie!")
-
-    valide = False
-    while not valide:
-        print("\nPartie terminée. Voulez-vous rejouer?")
-        print("1- Oui")
-        print("2- Non")
-        inp = input()
-
-        if int(inp) == 2:
-            valide = True
-            print("À la prochaine!")
-            rejouer = False
-        
-        elif int(inp) == 1:
-            valide = True
+    for i in reversed(range(17)):
+        if i % 2 == 0:
+            damier += str((i+2) // 2) + " |"
+            for j in range(9):
+                damier += " " + cases[j][(i // 2)] + " "
+                if j != 8:
+                    damier += mursV[j][i]
 
         else:
-            print("Veuillez entrer un choix valide")
+            damier +="  |"
+            for j in range(35):
+                if ((j-3) % 4) == 0 and mursH[j][(i // 2)] == " ":
+                    damier += mursV[int((j-3) / 4)][i]
+                else:
+                    damier += mursH[j][(i // 2)]
+        
+        damier += "|\n"
+
+    damier += "--|" + (35*"-") + "\n  |"
+    for i in range (9):
+        damier += " " + str(i+1) + "  "
+    
+    print(damier[:-2])
+
+        
+analyseur = analyser_commande()
+
+partie = api.débuter_partie(analyseur.idul)
+etat = partie[1]
+idPartie = partie[0]
+
+partieTerminee = False
+
+try:
+    while not partieTerminee:
+        afficher_damier_ascii(etat)
+
+        error = True
+        while error:
+            print("Quelle action voulez-vous effectuer?")
+            print("1- Vous déplacer")
+            print("2- Placer un mur horizontal")
+            print("3- Placer un mur vertical")
+            print("\n4- Quitter")
+
+            reponse = input()
+
+            if str(reponse) == "1":
+                while error:
+                    #créer un méthode
+                    print("\nEntrez les coordonnées où vous voulez vous déplacer")
+                    print("sous la forme suivante: x,y")
+                    inp = input()
+                    coord = (int(inp.split(",")[0]), inp.split(",")[1])
+
+                    if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
+                        error = False
+                        etat = api.jouer_coup(idPartie, "D", coord)
+                                
+                    else:
+                        print("Veuillez entrer un choix valide")
+
+            elif str(reponse) == "2":
+                while error:
+                    print("\nEntrez les coordonnées où vous voulez placer le mur")
+                    print("sous la forme suivante: x,y")
+                    inp = input()
+                    coord = (int(inp.split(",")[0]), inp.split(",")[1])
+
+                    if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
+                        error = False
+                        etat = api.jouer_coup(idPartie, "MH", coord)
+                                
+                    else:
+                        print("Veuillez entrer un choix valide")
+
+            elif str(reponse) == "3":
+                while error:
+                    print("\nEntrez les coordonnées où vous voulez vous placer le mur")
+                    print("sous la forme suivante: x,y")
+                    inp = input()
+                    coord = (int(inp.split(",")[0]), inp.split(",")[1])
+
+                    if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
+                        error = False
+                        etat = api.jouer_coup(idPartie, "MV", coord)
+                                
+                    else:
+                        print("Veuillez entrer un choix valide")
+
+            elif str(reponse) == "4":
+                error = False
+                partieTerminee = True
+
+            else:
+                print("Veuillez entrer un choix valide")
+
+except StopIteration as err:
+    print("\n" + str(err) + " a remporté la partie!")
