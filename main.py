@@ -7,12 +7,15 @@ def analyser_commande():
     parser = argparse.ArgumentParser(description="Jeu Quoridor - phase 1")
     # insérer ici avec les bons appels à la méthode add_argument
     parser.add_argument("idul", help="IDUL du joueur.")
-    parser.add_argument("-l", "--lister", dest="affichage", help="Lister les identifiants de vos 20 dernières parties", action="store_true")
+    parser.add_argument("-l", "--lister",
+    dest="affichage",
+    help="Lister les identifiants de vos 20 dernières parties",
+    action="store_true")
     return parser.parse_args()
 
 def afficher_damier_ascii(dico):
     cases = [["." for i in range(9)] for i in range(9)]
-    mursH = [[" " for i in range(8)] for i in range(35)]
+    mursh = [[" " for i in range(8)] for i in range(35)]
     mursV = [[" " for i in range(17)] for i in range(8)]
     joueurs = dico["joueurs"]
     idulJoueur = ""
@@ -24,14 +27,14 @@ def afficher_damier_ascii(dico):
             idulJoueur = joueur["nom"]
 
     dicoH = dico["murs"]["horizontaux"]
-    for coord in dicoH:
+    for coordo in dicoH:
         for i in range(7):
-            mursH[(4*coord[0])-4+i][coord[1]-1] = "-"
+            mursh[(4*coordo[0])-4+i][coordo[1]-1] = "-"
 
     dicoV = dico["murs"]["verticaux"]
-    for coord in dicoV:
+    for coordo2 in dicoV:
         for i in range(3):
-            mursV[(coord[0])-2][(2*coord[1])-2+i] = "|"
+            mursV[(coordo2[0])-2][(2*coordo2[1])-2+i] = "|"
 
     damier = "Légende: 1=" + idulJoueur + ", 2=automate\n"
     damier += "   "+("-" * 35)+"\n"
@@ -43,20 +46,18 @@ def afficher_damier_ascii(dico):
                 if j != 8:
                     damier += mursV[j][i]
         else:
-            damier+="  |"
+            damier += "  |"
             for j in range(35):
-                if ((j-3) % 4) == 0 and mursH[j][(i // 2)] == " ":
+                if ((j-3) % 4) == 0 and mursh[j][(i // 2)] == " ":
                     damier += mursV[int((j-3) / 4)][i]
                 else:
-                    damier += mursH[j][(i // 2)]
+                    damier += mursh[j][(i // 2)]
         damier += "|\n"
     damier += "--|" + (35*"-") + "\n  |"
     for i in range(9):
         damier += " " + str(i+1) + "  "
-    
     print(damier[:-2])
 
-        
 analyseur = analyser_commande()
 if analyseur.affichage:
     print(api.lister_parties(analyseur.idul))
@@ -64,13 +65,9 @@ else:
     partie = api.débuter_partie(analyseur.idul)
     etat = partie[1]
     idPartie = partie[0]
-
-    partieTerminee = False
-
-    
-    while not partieTerminee:
+    PARTIETERMINEE = False
+    while not PARTIETERMINEE:
         afficher_damier_ascii(etat)
-
         error = True
         while error:
             try:
@@ -111,7 +108,6 @@ else:
                             if (0 < int(coord[0]) < 10) and (0 < int(coord[1]) < 10):
                                 error = False
                                 etat = api.jouer_coup(idPartie, "MH", coord)
-                                        
                             else:
                                 print("Veuillez entrer un choix valide")
                         except TypeError:
@@ -128,24 +124,20 @@ else:
                         try:
                             if (0 < int(coord[0]) < 10) and (0 < int(coord[1]) < 10):
                                 error = False
-                                etat = api.jouer_coup(idPartie, "MV", coord)
-                                        
+                                etat = api.jouer_coup(idPartie, "MV", coord)   
                             else:
                                 print("Veuillez entrer un choix valide")
                         except TypeError:
                             print("Veuillez entrer un choix valide")
                         except ValueError:
                             print("Veuillez entrer un choix valide")
-
                 elif str(reponse) == "4":
                     error = False
-                    partieTerminee = True
-
+                    PARTIETERMINEE = True
                 else:
                     print("Veuillez entrer un choix valide")
-
             except RuntimeError as err:
                 print("\n"+str(err)+"\n")
             except StopIteration as err:
                 print(str(err) + " a remporté la partie!")
-                partieTerminee = True
+                PARTIETERMINEE = True
