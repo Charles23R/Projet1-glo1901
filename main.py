@@ -7,7 +7,7 @@ def analyser_commande():
     
     # insérer ici avec les bons appels à la méthode add_argument
     parser.add_argument("idul", help = "IDUL du joueur.")
-    parser.add_argument("-l", "--lister", help = "Lister les identifiants de vos 20 dernières parties", action = "store_true")
+    parser.add_argument("-l", "--lister", dest = "affichage", help = "Lister les identifiants de vos 20 dernières parties", action = "store_true")
     
     return parser.parse_args()
 
@@ -67,75 +67,79 @@ def afficher_damier_ascii(dico):
         
 analyseur = analyser_commande()
 
-partie = api.débuter_partie(analyseur.idul)
-etat = partie[1]
-idPartie = partie[0]
+if analyseur.affichage:
+    print(api.lister_parties(analyseur.idul))
 
-partieTerminee = False
+else:
+    partie = api.débuter_partie(analyseur.idul)
+    etat = partie[1]
+    idPartie = partie[0]
 
-try:
-    while not partieTerminee:
-        afficher_damier_ascii(etat)
+    partieTerminee = False
 
-        error = True
-        while error:
-            print("Quelle action voulez-vous effectuer?")
-            print("1- Vous déplacer")
-            print("2- Placer un mur horizontal")
-            print("3- Placer un mur vertical")
-            print("\n4- Quitter")
+    try:
+        while not partieTerminee:
+            afficher_damier_ascii(etat)
 
-            reponse = input()
+            error = True
+            while error:
+                print("Quelle action voulez-vous effectuer?")
+                print("1- Vous déplacer")
+                print("2- Placer un mur horizontal")
+                print("3- Placer un mur vertical")
+                print("\n4- Quitter")
 
-            if str(reponse) == "1":
-                while error:
-                    #créer un méthode
-                    print("\nEntrez les coordonnées où vous voulez vous déplacer")
-                    print("sous la forme suivante: x,y")
-                    inp = input()
-                    coord = (int(inp.split(",")[0]), inp.split(",")[1])
+                reponse = input()
 
-                    if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                        error = False
-                        etat = api.jouer_coup(idPartie, "D", coord)
-                                
-                    else:
-                        print("Veuillez entrer un choix valide")
+                if str(reponse) == "1":
+                    while error:
+                        #créer un méthode
+                        print("\nEntrez les coordonnées où vous voulez vous déplacer")
+                        print("sous la forme suivante: x,y")
+                        inp = input()
+                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
 
-            elif str(reponse) == "2":
-                while error:
-                    print("\nEntrez les coordonnées où vous voulez placer le mur")
-                    print("sous la forme suivante: x,y")
-                    inp = input()
-                    coord = (int(inp.split(",")[0]), inp.split(",")[1])
+                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
+                            error = False
+                            etat = api.jouer_coup(idPartie, "D", coord)
+                                    
+                        else:
+                            print("Veuillez entrer un choix valide")
 
-                    if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                        error = False
-                        etat = api.jouer_coup(idPartie, "MH", coord)
-                                
-                    else:
-                        print("Veuillez entrer un choix valide")
+                elif str(reponse) == "2":
+                    while error:
+                        print("\nEntrez les coordonnées où vous voulez placer le mur")
+                        print("sous la forme suivante: x,y")
+                        inp = input()
+                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
 
-            elif str(reponse) == "3":
-                while error:
-                    print("\nEntrez les coordonnées où vous voulez vous placer le mur")
-                    print("sous la forme suivante: x,y")
-                    inp = input()
-                    coord = (int(inp.split(",")[0]), inp.split(",")[1])
+                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
+                            error = False
+                            etat = api.jouer_coup(idPartie, "MH", coord)
+                                    
+                        else:
+                            print("Veuillez entrer un choix valide")
 
-                    if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                        error = False
-                        etat = api.jouer_coup(idPartie, "MV", coord)
-                                
-                    else:
-                        print("Veuillez entrer un choix valide")
+                elif str(reponse) == "3":
+                    while error:
+                        print("\nEntrez les coordonnées où vous voulez vous placer le mur")
+                        print("sous la forme suivante: x,y")
+                        inp = input()
+                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
 
-            elif str(reponse) == "4":
-                error = False
-                partieTerminee = True
+                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
+                            error = False
+                            etat = api.jouer_coup(idPartie, "MV", coord)
+                                    
+                        else:
+                            print("Veuillez entrer un choix valide")
 
-            else:
-                print("Veuillez entrer un choix valide")
+                elif str(reponse) == "4":
+                    error = False
+                    partieTerminee = True
 
-except StopIteration as err:
-    print("\n" + str(err) + " a remporté la partie!")
+                else:
+                    print("Veuillez entrer un choix valide")
+
+    except StopIteration as err:
+        print("\n" + str(err) + " a remporté la partie!")
