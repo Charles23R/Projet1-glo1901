@@ -99,13 +99,16 @@ else:
                         print("\nEntrez les coordonnées où vous voulez vous déplacer")
                         print("sous la forme suivante: x,y")
                         inp = input()
-                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
+                        coord = (int(inp.split(",")[0]), int(inp.split(",")[1]))
 
-                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                            error = False
-                            etat = api.jouer_coup(idPartie, "D", coord)
-                                    
-                        else:
+                        try:
+                            if (0 < int(coord[0]) < 10) and (0 < int(coord[1]) < 10):
+                                error = False
+                                etat = api.jouer_coup(idPartie, "D", coord)
+                                        
+                            else:
+                                print("Veuillez entrer un choix valide")
+                        except TypeError or ValueError:
                             print("Veuillez entrer un choix valide")
 
                 elif str(reponse) == "2":
@@ -113,13 +116,16 @@ else:
                         print("\nEntrez les coordonnées où vous voulez placer le mur")
                         print("sous la forme suivante: x,y")
                         inp = input()
-                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
+                        coord = (int(inp.split(",")[0]), int(inp.split(",")[1]))
 
-                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                            error = False
-                            etat = api.jouer_coup(idPartie, "MH", coord)
-                                    
-                        else:
+                        try:
+                            if (0 < int(coord[0]) < 10) and (0 < int(coord[1]) < 10):
+                                error = False
+                                etat = api.jouer_coup(idPartie, "MH", coord)
+                                        
+                            else:
+                                print("Veuillez entrer un choix valide")
+                        except TypeError or ValueError:
                             print("Veuillez entrer un choix valide")
 
                 elif str(reponse) == "3":
@@ -127,13 +133,16 @@ else:
                         print("\nEntrez les coordonnées où vous voulez vous placer le mur")
                         print("sous la forme suivante: x,y")
                         inp = input()
-                        coord = (int(inp.split(",")[0]), inp.split(",")[1])
+                        coord = (int(inp.split(",")[0]), int(inp.split(",")[1]))
 
-                        if (0 < int(coord[0] < 10)) and (0 < int(coord[1]) < 10):
-                            error = False
-                            etat = api.jouer_coup(idPartie, "MV", coord)
-                                    
-                        else:
+                        try:
+                            if (0 < int(coord[0]) < 10) and (0 < int(coord[1]) < 10):
+                                error = False
+                                etat = api.jouer_coup(idPartie, "MV", coord)
+                                        
+                            else:
+                                print("Veuillez entrer un choix valide")
+                        except TypeError or ValueError:
                             print("Veuillez entrer un choix valide")
 
                 elif str(reponse) == "4":
@@ -145,3 +154,6 @@ else:
 
             except RuntimeError as err:
                 print("\n"+str(err)+"\n")
+            except StopIteration as err:
+                print(str(err) + " a remporté la partie!")
+                partieTerminee = True
