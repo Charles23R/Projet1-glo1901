@@ -1,6 +1,7 @@
 import argparse
 import api
 
+
 def analyser_commande():
     # créer un analyseur de ligne de commande
     parser = argparse.ArgumentParser(description = "Jeu Quoridor - phase 1")
@@ -21,7 +22,7 @@ def afficher_damier_ascii(dico):
     joueurs = dico["joueurs"]
     idulJoueur = ""
     for joueur in joueurs:
-        if joueur["nom"] == "robot":                #à changer pour test
+        if joueur["nom"] == "robot":
             cases[joueur["pos"][0]-1][joueur["pos"][1]-1] = "2"
         else:
             cases[joueur["pos"][0]-1][joueur["pos"][1]-1] = "1"
@@ -77,13 +78,14 @@ else:
 
     partieTerminee = False
 
-    try:
-        while not partieTerminee:
-            afficher_damier_ascii(etat)
+    
+    while not partieTerminee:
+        afficher_damier_ascii(etat)
 
-            error = True
-            while error:
-                print("Quelle action voulez-vous effectuer?")
+        error = True
+        while error:
+            try:
+                print("\nQuelle action voulez-vous effectuer?")
                 print("1- Vous déplacer")
                 print("2- Placer un mur horizontal")
                 print("3- Placer un mur vertical")
@@ -141,5 +143,5 @@ else:
                 else:
                     print("Veuillez entrer un choix valide")
 
-    except StopIteration as err:
-        print("\n" + str(err) + " a remporté la partie!")
+            except RuntimeError as err:
+                print("\n"+str(err)+"\n")
