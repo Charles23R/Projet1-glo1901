@@ -7,10 +7,9 @@ def analyser_commande():
     """Analyse les commandes du terminal"""
     parser = argparse.ArgumentParser(description="Jeu Quoridor - phase 1")
     parser.add_argument("idul", help="IDUL du joueur.")
-    parser.add_argument("-l", "--lister",
-    dest="affichage",
-    help="Lister les identifiants de vos 20 dernières parties",
-    action="store_true")
+    aide = "Lister les identifiants de vos 20 dernières parties"
+    st = "store_true"
+    parser.add_argument("-l", "--lister", dest="affichage", help=aide, action=st)
     return parser.parse_args()
 
 def afficher_damier_ascii(dico):
@@ -90,7 +89,7 @@ else:
                         try:
                             if (0 < int(COORD[0]) < 10) and (0 < int(COORD[1]) < 10):
                                 ERROR = False
-                                ETAT = api.jouer_coup(IDPARTIE, "D", COORD)         
+                                ETAT = api.jouer_coup(IDPARTIE, "D", COORD)
                             else:
                                 print("Veuillez entrer un choix valide")
                         except TypeError:

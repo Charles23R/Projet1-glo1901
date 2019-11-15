@@ -30,8 +30,8 @@ def débuter_partie(idul):
 def jouer_coup(id_partie, type_coup, position):
     """retourne l'état de jeu actuel"""
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
-
-    rep=requests.post(url_base+'jouer/', data={'id': id_partie, "type": type_coup, "pos": position})
+    j = 'jouer/'
+    rep = requests.post(url_base+j, data={'id': id_partie, "type": type_coup, "pos": position})
 
     if rep.status_code == 200:
         # la requête s'est déroulée normalement; décoder le JSON
