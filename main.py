@@ -1,11 +1,11 @@
+"""Ceci est le main. Il contient la fonction analyser_commande et afficher_damier_ascii"""
 import argparse
 import api
 
 
 def analyser_commande():
-    # créer un ANALYSEUR de ligne de commande
+    """Analyse les commandes du terminal"""
     parser = argparse.ArgumentParser(description="Jeu Quoridor - phase 1")
-    # insérer ici avec les bons appels à la méthode add_argument
     parser.add_argument("idul", help="IDUL du joueur.")
     parser.add_argument("-l", "--lister",
     dest="affichage",
@@ -14,6 +14,7 @@ def analyser_commande():
     return parser.parse_args()
 
 def afficher_damier_ascii(dico):
+    """affiche l'état de jeu en art ascii"""
     cases = [["." for i in range(9)] for i in range(9)]
     mursh = [[" " for i in range(8)] for i in range(35)]
     mursv = [[" " for i in range(17)] for i in range(8)]

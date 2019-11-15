@@ -1,6 +1,8 @@
+"""contient toutes les fonctions qui communiquent avec le serveur"""
 import requests
 
 def lister_parties(idul):
+    """retourne la liste des 20 dernières parties de l'utilisateur"""
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
     rep = requests.get(url_base+'lister/', params={'idul': idul})
     if rep.status_code == 200:
@@ -12,6 +14,7 @@ def lister_parties(idul):
 
 
 def débuter_partie(idul):
+    """Retourne une nouvelle partie"""
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
 
     rep = requests.post(url_base+'débuter/', data={'idul': idul})
@@ -25,6 +28,7 @@ def débuter_partie(idul):
     print(f"Le POST sur {url_base+'débuter'} a produit le code d'erreur {rep.status_code}.")
 
 def jouer_coup(id_partie, type_coup, position):
+    """retourne l'état de jeu actuel"""
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
 
     rep=requests.post(url_base+'jouer/', data={'id': id_partie, "type": type_coup, "pos": position})
